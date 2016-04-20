@@ -9,91 +9,77 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+//main Execution
 public class SimulatorTest extends JFrame {
 	public final TestCanvas canvas;
 	public JPanel p;
 	public JButton btnTest;
 	public JButton btnClear;
-	public Pen pen;
-
-	public SimulatorTest() {
-		//オブジェクトの生成
-		p = new JPanel();
-		btnTest = new JButton("TEST");
-		btnClear = new JButton("CLEAR");
-		canvas = new TestCanvas();
-
-		// タイトルを設定
-		setTitle("SimulatorTest");
+	
+	
+	public static void main(String[] args) {
+		new SimulatorTest("SimulatorTest");
+	}
+	
+	public SimulatorTest(String title) {
+		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		//レイアウトの設定
-		p.setLayout(null);
-		canvas.setBounds(0, 0, TestCanvas.CANVAS_X_MAX, TestCanvas.CANVAS_Y_MAX);
+		
+		canvas = new TestCanvas();
+		canvas.setBounds(0, 0, TestCanvas.CANVAS_WIDTH_MAX, TestCanvas.CANVAS_HEIGHT_MAX);
 		canvas.setBackground(Color.white);
-		btnTest.setBounds(canvas.getWidth()/ 2 - 40, canvas.getHeight(), 80, 30);
-		btnClear.setBounds(canvas.getWidth() / 2 - 40 + 100, canvas.getHeight(), 80, 30);
 		setSize(canvas.getWidth(), canvas.getHeight() + 100);
-
-		//メインパネルを作成してフレームに追加
-		p.add(canvas);
-		p.add(btnTest);
-		p.add(btnClear);
-		getContentPane().add(p, BorderLayout.CENTER);
-
-		setVisible(true);
-		//↑↑↑↑レイアウト設定終了↑↑↑↑
-
-		pen = new Pen(canvas);
-
-		//ボタンの設定
+		
+		int buttonX = canvas.getWidth()/ 2 - 40;
+		int buttonY = canvas.getHeight();
+		
+		btnTest = new JButton("TEST");
+		btnTest.setBounds(buttonX, buttonY, 80, 30);
 		btnTest.addActionListener(
 			new ActionListener(){
 				public void actionPerformed(ActionEvent event){
-					Test(pen);
+					Test();
 				}
 			}
 		);
-
+		
+		btnClear = new JButton("CLEAR");
+		btnClear.setBounds(buttonX + 100, buttonY, 80, 30);
 		btnClear.addActionListener(
 			new ActionListener(){
 				public void actionPerformed(ActionEvent event){
-					System.out.printf("clear");
 					canvas.clear();
 				}
 			}
 		);
-
+		
+		
+		p = new JPanel();
+		p.setLayout(null);
+		p.add(canvas);
+		p.add(btnTest);
+		p.add(btnClear);
+		getContentPane().add(p, BorderLayout.CENTER);
+		
+		
+		setVisible(true);
+		
 	}
-
-	public static void Test(Pen pen){
-
+	
+	//---this run when press "Test" button.
+	public void Test(){
 		Random rnd = new Random();
-
-		ArrayList<Point> points = new ArrayList<Point>();
-		Point p1 = new Point(rnd.nextInt(pen.canvas.getWidth()), rnd.nextInt(pen.canvas.getHeight()));
-		Point p2 = new Point(rnd.nextInt(pen.canvas.getWidth()), rnd.nextInt(pen.canvas.getHeight()));
-		Point p3 = new Point(rnd.nextInt(pen.canvas.getWidth()), rnd.nextInt(pen.canvas.getHeight()));
-		Point p4 = new Point(rnd.nextInt(pen.canvas.getWidth()), rnd.nextInt(pen.canvas.getHeight()));
-
-		points.add(p1);
-		points.add(p2);
-		points.add(p3);
-
-		DrawObject sankaku = new DrawObject(points);
-		DrawObject point = new DrawObject(p4);
-
-		sankaku.setFlagSortPoint(true);
-		sankaku.setFlagSetText(true);
-		point.setFlagSetText(true);
-
-		pen.Draw(sankaku);
-		pen.Draw(point);
-
-		System.out.printf("%.1f度\n",Ruler.getAngle(p1, p2, p3));
+		
+		//---create Point and Line
+		Line sankaku = new Line();
+		for(int n = 0; n < 3; n++)
+			sankaku.addPoint(new Point(rnd.nextInt(canvas.getWidth()), rnd.nextInt(canvas.getHeight())));
+		
+		//---create Graphic
+		canvas.addLine(sankaku);
+		
+		System.out.printf("%.1f��\n",sankaku.getAngle());
 	}
 
-	public static void main(String[] args) {
-		SimulatorTest frame = new SimulatorTest();
-	}
+	
 }

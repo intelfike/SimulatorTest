@@ -6,89 +6,59 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+//---2D
 public class TestCanvas extends JPanel {
-	public static final int CANVAS_X_MAX = 600;
-	public static final int CANVAS_Y_MAX = 400;
+	Graphics2D g2;
 
-	public ArrayList<Point> points = new ArrayList<Point>(10);
-	public ArrayList<DrawObject> objects = new ArrayList<DrawObject>();
+	public static final int CANVAS_WIDTH_MAX = 600;
+	public static final int CANVAS_HEIGHT_MAX = 400;
 
-	public int nowPoint = 0;
-
-
-	public TestCanvas(int width, int height) {
-		// Canvasのサイズ設定と生成
-		setPreferredSize(new Dimension(width, height));
-	}
+	public ArrayList<Line> lines = new ArrayList<Line>();
 
 	public TestCanvas(){
-		this(CANVAS_X_MAX, CANVAS_Y_MAX);
+		setPreferredSize(new Dimension(CANVAS_WIDTH_MAX, CANVAS_HEIGHT_MAX));
 	}
 
 	public void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D)g;
+		this.g2 = (Graphics2D)g;
 
 		g.setColor(Color.white);
-		g.fillRect(0, 0, CANVAS_X_MAX, CANVAS_Y_MAX);
+		g.fillRect(0, 0, CANVAS_WIDTH_MAX, CANVAS_HEIGHT_MAX);
 		System.out.printf("paint\n");
-
-		paintDrawObjects(g2);
-	}
-
-	public void paintDrawObjects(Graphics2D g2){
-
-		//書き出すたびに点の個数を初期化する
-		nowPoint = 0;
-
-		System.out.printf("size_%d\n", objects.size());
-		for(int i = 0; i < objects.size(); i++ ){
-			DrawObject drawObject = objects.get(i);
-			settingDrawObject(drawObject);
-
-			int[] pointx = new int[drawObject.points.size()];
-			int[] pointy = new int[drawObject.points.size()];
-
-			for(int j = 0; j < drawObject.points.size(); j++){
-				Point point = drawObject.points.get(j);
-				pointx[j] = point.x;
-				pointy[j] = point.y;
-
-				//Polygon描写
+		if(0 < lines.size())System.out.print("draw Point ");
+		for(int i = 0; i < lines.size(); i++ ){
+			Line line = lines.get(i);
+			int[] x = new int[line.points.size()];
+			int[] y = new int[line.points.size()];
+			
+			for(int j = 0; j < line.points.size(); j++){
+				Point point = line.points.get(j);
+				//this.points.add(point);
+				x[j] = point.x;
+				y[j] = point.y;
 				g2.setColor(point.color);
 				g2.drawRect(point.x, point.y, 3, 3);
 				g2.drawString(point.text, point.x - 10, point.y - 10);
+				System.out.print(j + ":");
 			}
-			//Point描写
-			g2.setColor(drawObject.color);
-			g2.drawPolygon(pointx, pointy, drawObject.points.size());
+			g2.setColor(line.color);
+			g2.drawPolygon(x, y, line.points.size());
 		}
+		System.out.println("\b|");
 	}
 
-	public void addDrawObject(DrawObject drawObject){
-		this.objects.add(drawObject);
-	}
-
-	public void show(){
+	public void addLine(Line line){
+		this.lines.add(line);
 		repaint();
 	}
-
-	public void settingDrawObject(DrawObject drawObject){
-		drawObject.sortDrawObject(drawObject);
-		addNowPoint(drawObject.setText(getNowPoint()));
-
-	}
-
+	
+	//---this run when press "Clear" button.
 	public void clear(){
-		objects.clear();
-		this.nowPoint = 0;
-		show();
-	}
-
-	public void addNowPoint(int i){
-		this.nowPoint += i;
-	}
-
-	public int getNowPoint(){
-		return this.nowPoint;
+		lines.clear();
+		if(0 < lines.size())
+			System.out.printf("clear\n");
+		else
+			System.out.printf("fail clear\n");
+		repaint();
 	}
 }
