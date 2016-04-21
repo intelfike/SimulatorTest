@@ -1,58 +1,50 @@
-�w�Z��my�m�[�gPC�ŊJ����i�߁A��Github�ɍŐV�ł��グ�܂���
-���A������Fork��1���Ă��邱�ƂɋC���t�����Ă݂��
-�����ɂ͒��J�ȓY��w���Ƃ��ꂢ�ȃ\�[�X�R�[�h���c
-������������ǂ݂܂� �搶�������肪�Ƃ��������܂�
-���̕����\���21�����Ȃ��Ƃ��v���Ă܂��i��������Ƃ͌����Ă��Ȃ��j
 
-�Ȃ񂾂���...
-���삪�킩��Ȃ��ăt�H�[�N����������H
-������̃~�X�Œp�������������Ȃ��I�������Ă��܂����I���Ă��ƂŁB
-�g�����͂Ȃ�ׂ��c��������ł����A�傳��̍l���ɉ���Ȃ��`�ɂȂ��Ă��炲�߂�Ȃ����B
+拡張性はなるべく残したつもりですが、主さんの考えに沿わない形になってたらごめんなさい。
 
-�v�_
-�U�A�K�v�̂Ȃ��N���XPen�@����ł�canvas�̃I�u�W�F�N�g���i�[���邾���ŁA�I�u�W�F�N�g���Ӗ��̂Ȃ���d�\���ɂȂ�B
-�V�A�K�v�̂Ȃ��N���XRuler�@DrawObject�̎���[Point�I�u�W�F�N�g]���������p�ړI�Ȃ̂ŁA�K�v�Ȃ��BDrawObject�N���X�ɓ����B
-�P�R�ADrawObject��Line�@�ɂ��APoint(0D),Line(1D),TestCanvas(2D)�ɉ�����SimulatorTest(���s)�̖�������������B
+要点
+６、必要のないクラスPen　現状ではcanvasのオブジェクトを格納するだけで、オブジェクトが意味のない二重構造になる。
+７、必要のないクラスRuler　DrawObjectの持つ[Pointオブジェクト]が同じ利用目的なので、必要ない。DrawObjectクラスに統合。
+１３、DrawObject→Line　にし、Point(0D),Line(1D),TestCanvas(2D)に加えてSimulatorTest(実行)の役割を持たせる。
 
 
 
 
-�ύX����
-�P�A�����R�[�h�̊֌W�ŁA���{��̕����͊��ɂ���Ă̓R���p�C�����ł��Ȃ��B�R�����g���e��W���o�́B
-	�S���p��̃N���X���쐬���Ă�����p�����ē��{��R�����g������ȂǁB
+変更メモ
+１、文字コードの関係で、日本語の文字は環境によってはコンパイルができない。コメント内容や標準出力。
+	全部英語のクラスを作成してそれを継承して日本語コメントをつけるなど。
 
-�Q�A���\�b�h���ɑ啶�����g���Ă���BPen#Draw()�ȂǁB���܂��낵���Ȃ��B
-	�N���X�����o���Ă��Ȃ��ƃR���X�g���N�^�Ɍ����Ă��܂��B
+２、メソッド名に大文字が使われている。Pen#Draw()など。あまりよろしくない。
+	クラス名を覚えていないとコンストラクタに見えてしまう。
 
-�R�ASimulatorTest#Test()�ŁApoint��DrawObject��pen.Draw�ƃI�u�W�F�N�g�𒼐�
-	�n���Ă���A�N���X�Ԃ̌����x���������ɁA���ꂼ��̃N���X���I�[�o�[���[�h�𑽗p���Ĕĉ����Ă���B
-	�R�s�y�R�[�h��������ƏC������ςȂ̂ŕێ琫�������邵�A���͗ʂ������̂ŒP���ɓǂ݂ɂ����B
+３、SimulatorTest#Test()で、point→DrawObject→pen.Drawとオブジェクトを直接
+	渡しており、クラス間の結合度が高いわりに、それぞれのクラスをオーバーロードを多用して汎化している。
+	コピペコードが増えると修正が大変なので保守性も下がるし、文章量が多いので単純に読みにくい。
 
-�S�A�N���X�̗��p�ړI�����L����Ă��Ȃ��BREADME�ł��R�����g�ł������̂ł���ƕ֗��B
+４、クラスの利用目的が明記されていない。READMEでもコメントでもいいのであると便利。
 
-�T�A�I�u�W�F�N�g�ւ̑���̎�ނłȂ��A�I�u�W�F�N�g�ŋL�q���܂Ƃ߂�B
+５、オブジェクトへの操作の種類でなく、オブジェクトで記述をまとめる。
 
-�U�A�K�v�̂Ȃ��N���XPen�@����ł�canvas�̃I�u�W�F�N�g���i�[���邾���ŁA�I�u�W�F�N�g���Ӗ��̂Ȃ���d�\���ɂȂ�B
-	�����ɁA�񐄏��̃��\�b�h�𗘗p���Ă����B�R���p�C�����Ɋm�F�����悤�B
+６、必要のないクラスPen　現状ではcanvasのオブジェクトを格納するだけで、オブジェクトが意味のない二重構造になる。
+	同時に、非推奨のメソッドを利用していた。コンパイル時に確認をしよう。
 
-�V�A�K�v�̂Ȃ��N���XRuler�@DrawObject�̎���[Point�I�u�W�F�N�g]���������p�ړI�Ȃ̂ŁA�K�v�Ȃ��BDrawObject�N���X�ɓ����B
+７、必要のないクラスRuler　DrawObjectの持つ[Pointオブジェクト]が同じ利用目的なので、必要ない。DrawObjectクラスに統合。
 
-�W�APoint#gatStringPoint()�́A�N���X����Point�ł��邱�Ƃ����L����Ă���̂ɌJ��Ԃ��Ă���B
-	�܂��A�N���X���C�u�����ł͂������������\�b�h��toString()�Ə�����邱�Ƃ������B
+８、Point#gatStringPoint()は、クラス名でPointであることが明記されているのに繰り返している。
+	また、クラスライブラリではこういったメソッドはtoString()と書かれることが多い。
 	
-�X�A�N���A�{�^���̏���System.out.prntln("clear");�́A�����ƌ��т��Ă���̂�Paint#clear�Ɉړ�
+９、クリアボタンの処理System.out.prntln("clear");は、消去と結びついているのでPaint#clearに移動
 
-�P�O�ATestCanvas#paintComponent()�ŕ\�������P�B���Ƃ���3-6-9�Əo�͂̍s���������Ă����̂ŁA1�s�ɂ܂Ƃ߂Čy��
+１０、TestCanvas#paintComponent()で表示を改善。もともと3-6-9と出力の行数が増えていたので、1行にまとめて軽減
 
-�P�P�ADrawObject�̃R���X�g���N�^���Ȃ����A���\�b�h�ŉ���(�J��Ԃ������̂���)
+１１、DrawObjectのコンストラクタをなくし、メソッドで解決(繰り返し処理のため)
 
-�P�Q�ATestCanvas�̃R���X�g���N�^�ŁACANVAS_X_MAX�ȊO�̒l��ݒ�ł��Ă͂����Ȃ��̂ň����̂�����̂��폜
-	�܂��AX�Ǝw�肷��ƍ��W���Ӗ����Ă��܂��̂�WIDTH,HEIGHT�ɕύX
+１２、TestCanvasのコンストラクタで、CANVAS_X_MAX以外の値を設定できてはいけないので引数のあるものを削除
+	また、Xと指定すると座標を意味してしまうのでWIDTH,HEIGHTに変更
 	
-�P�R�ADrawObject��Line�@�ɂ��APoint(0D),Line(1D),TestCanvas(2D)�ɉ�����SimulatorTest(���s)�̖�������������B
+１３、DrawObject→Line　にし、Point(0D),Line(1D),TestCanvas(2D)に加えてSimulatorTest(実行)の役割を持たせる。
 
-�P�S�APoint#getPoint��int[]�ŕԂ��Ă��邪�A���p��ʂ����Ȃ��̂�getX��getY�ɕ���(�N���X���ƃ��\�b�h�����d�����Ă�����)
+１４、Point#getPointはint[]で返しているが、利用場面が少ないのでgetXとgetYに分割(クラス名とメソッド名が重複してもいる)
 
-�P�T�A����ł͎g�p���Ȃ����\�b�h���R�����g�A�E�g���܂����B
+１５、現状では使用しないメソッドをコメントアウトしました。
 
-���l�̃R�[�h������@��Ȃ�Ă��܂�Ȃ��̂ŁA�ƂĂ��׋��ɂȂ�܂����B���肪�Ƃ��������܂��B
+他人のコードを見る機会なんてあまりないので、とても勉強になりました。ありがとうございます。
